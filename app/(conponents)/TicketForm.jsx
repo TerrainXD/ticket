@@ -2,10 +2,146 @@
 
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheckCircle, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 
 const TicketForm = ({ ticket }) => {
   const EDITMODE = ticket._id === "new" ? false : true;
   const router = useRouter();
+
+  // Updated status progression
+  const STATUS_PROGRESSION = {
+    'pending': ['accepted', 'rejected'],
+    'accepted': ['resolved'],
+    'resolved': [], // No further status changes allowed
+    'rejected': []
+  };
+
+  const handleStatusUpdate = async (newStatus) => {
+    const currentStatus = ticket.status;
+    const allowedNextStatuses = STATUS_PROGRESSION[currentStatus] || [];
+
+    if (!allowedNextStatuses.includes(newStatus)) {
+      alert(`Cannot change status from ${currentStatus} to ${newStatus}`);
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/Tickets/${ticket._id}`, {
+        method: "PUT",
+        body: JSON.stringify({ formData: { status: newStatus } }),
+        headers: {
+          "content-type": "application/json",
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to Update Ticket.");
+      }
+
+      router.refresh();
+      router.push("/");
+    } catch (error) {
+      console.error("Error updating ticket:", error);
+      alert("Failed to update ticket status.");
+    }
+  };
+
+  // If not creating a new ticket, show read-only view
+  if (EDITMODE) {
+    // Determine available actions based on current status
+    const getStatusActions = () => {
+      switch(ticket.status) {
+        case 'pending':
+          return [
+            { status: 'accepted', label: 'Accept', icon: faCheckCircle, className: 'bg-emerald-600 hover:bg-emerald-700' },
+            { status: 'rejected', label: 'Reject', icon: faTimesCircle, className: 'bg-red-600 hover:bg-red-700' }
+          ];
+        case 'accepted':
+          return [
+            { status: 'resolved', label: 'Resolve', icon: faCheckCircle, className: 'bg-emerald-600 hover:bg-emerald-700' }
+          ];
+        case 'resolved':
+          return []; // No actions for resolved tickets
+        case 'rejected':
+          return []; // No actions for rejected tickets
+        default:
+          return [];
+      }
+    };
+
+    const statusActions = getStatusActions();
+
+    return (
+      <div className="max-w-2xl mx-auto bg-slate-900 rounded-3xl border border-slate-800 shadow-2xl p-8">
+        <h3 className="text-2xl text-white mb-6 pb-3 border-b border-slate-700">
+          Ticket Details
+        </h3>
+        
+        <div className="space-y-4">
+          <div>
+            <label className="block mb-2 text-sm font-medium text-slate-400">Title</label>
+            <div className="bg-slate-800 rounded-xl p-3 text-white">{ticket.title}</div>
+          </div>
+          
+          <div>
+            <label className="block mb-2 text-sm font-medium text-slate-400">Description</label>
+            <div className="bg-slate-800 rounded-xl p-3 text-white min-h-[100px]">
+              {ticket.description}
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block mb-2 text-sm font-medium text-slate-400">Category</label>
+              <div className="bg-slate-800 rounded-xl p-3 text-white">{ticket.category}</div>
+            </div>
+            
+            <div>
+              <label className="block mb-2 text-sm font-medium text-slate-400">Current Status</label>
+              <div className="bg-slate-800 rounded-xl p-3 text-white">{ticket.status}</div>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block mb-2 text-sm font-medium text-slate-400">Priority</label>
+              <div className="bg-slate-800 rounded-xl p-3 text-white">{ticket.priority}</div>
+            </div>
+            
+            <div>
+              <label className="block mb-2 text-sm font-medium text-slate-400">Created At</label>
+              <div className="bg-slate-800 rounded-xl p-3 text-white">
+                {new Date(ticket.createdAt).toLocaleString()}
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {statusActions.length > 0 && (
+          <div className="mt-8 flex justify-center space-x-4">
+            {statusActions.map((action) => (
+              <button
+                key={action.status}
+                onClick={() => handleStatusUpdate(action.status)}
+                className={`
+                  flex items-center space-x-2 px-6 py-3 rounded-xl font-semibold 
+                  transition transform hover:scale-[1.02] focus:outline-none
+                  ${action.className} text-white
+                `}
+              >
+                <FontAwesomeIcon 
+                  icon={action.icon} 
+                  className="mr-2" 
+                />
+                {action.label}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -20,160 +156,124 @@ const TicketForm = ({ ticket }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (EDITMODE) {
-      const res = await fetch(`/api/Tickets/${ticket._id}`, {
-        method: "PUT",
-        body: JSON.stringify({ formData }),
-        "content-type": "application/json",
-      });
+    const newTicketData = {
+      ...formData,
+      status: "pending"
+    };
 
-      if (!res.ok) {
-        throw new Error("Failed to Update Ticket.");
-      }
-    } else {
+    try {
       const res = await fetch("/api/Tickets", {
         method: "POST",
-        body: JSON.stringify({ formData }),
-        "content-type": "application/json",
+        body: JSON.stringify({ formData: newTicketData }),
+        headers: {
+          "content-type": "application/json",
+        },
       });
 
       if (!res.ok) {
         throw new Error("Failed to create Ticket.");
       }
-    }
 
-    router.refresh();
-    router.push("/");
+      router.refresh();
+      router.push("/");
+    } catch (error) {
+      console.error("Error creating ticket:", error);
+      alert("Failed to create ticket.");
+    }
   };
 
-  const startingTicketData = {
+  const [formData, setFormData] = useState({
     title: "",
     description: "",
     priority: 1,
-    progress: 0,
-    status: "pending",
     category: "Hardware Problem",
-  };
+  });
 
-  if (EDITMODE) {
-    startingTicketData["title"] = ticket.title;
-    startingTicketData["description"] = ticket.description;
-    startingTicketData["priority"] = ticket.priority;
-    startingTicketData["progress"] = ticket.progress;
-    startingTicketData["status"] = ticket.status;
-    startingTicketData["category"] = ticket.category;
-  }
-
-  const [formData, setFormData] = useState(startingTicketData);
   return (
     <div className="flex justify-center">
       <form
-        className="flex flex-col gap-3 w-1/2"
+        className="w-full max-w-2xl space-y-6"
         method="post"
         onSubmit={handleSubmit}
       >
-        <h3>{EDITMODE ? "Update your Ticket" : "Create Your Ticket"}</h3>
-        <label>Title</label>
-        <input
-          id="title"
-          name="title"
-          type="text"
-          onChange={handleChange}
-          required={true}
-          value={formData.title}
-        />
-
-        <label>Description</label>
-        <textarea
-          id="description"
-          name="description"
-          type="text"
-          onChange={handleChange}
-          required={true}
-          value={formData.description}
-          rows="5"
-        />
-
-        <label>Category</label>
-        <select
-          name="category"
-          value={formData.category}
-          onChange={handleChange}
-        >
-          <option value="Hardware Problem">Hardware Problem</option>
-          <option value="Software Problem">Software Problem</option>
-          <option value="Project">Project</option>
-        </select>
-
-        <label>Priority</label>
+        <h3 className="text-center">Create Your Ticket</h3>
+        
         <div>
+          <label htmlFor="title">Title</label>
           <input
-            id="priority-1"
-            name="priority"
-            type="radio"
+            id="title"
+            name="title"
+            type="text"
             onChange={handleChange}
-            value={1}
-            checked={formData.priority == 1}
+            required={true}
+            value={formData.title}
+            placeholder="Enter ticket title"
           />
-          <label>1</label>
-          <input
-            id="priority-2"
-            name="priority"
-            type="radio"
-            onChange={handleChange}
-            value={2}
-            checked={formData.priority == 2}
-          />
-          <label>2</label>
-          <input
-            id="priority-3"
-            name="priority"
-            type="radio"
-            onChange={handleChange}
-            value={3}
-            checked={formData.priority == 3}
-          />
-          <label>3</label>
-          <input
-            id="priority-4"
-            name="priority"
-            type="radio"
-            onChange={handleChange}
-            value={4}
-            checked={formData.priority == 4}
-          />
-          <label>4</label>
-          <input
-            id="priority-5"
-            name="priority"
-            type="radio"
-            onChange={handleChange}
-            value={5}
-            checked={formData.priority == 5}
-          />
-          <label>5</label>
         </div>
-        {/* <label>Progress</label>
-        <input
-          type="range"
-          id="progress"
-          name="progress"
-          value={formData.progress}
-          min="0"
-          max="100"
-          onChange={handleChange}
-        /> */}
-        <label>Status</label>
-        <select name="status" value={formData.status} onChange={handleChange}>
-          <option value="pending">pending</option>
-          <option value="accepted">accepted</option>
-          <option value="resolved">resolved</option>
-          <option value="rejected">rejected</option>
-        </select>
+
+        <div>
+          <label htmlFor="description">Description</label>
+          <textarea
+            id="description"
+            name="description"
+            onChange={handleChange}
+            required={true}
+            value={formData.description}
+            rows="5"
+            placeholder="Provide detailed description of the issue"
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-6">
+          <div>
+            <label>Category</label>
+            <select
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+            >
+              <option value="Hardware Problem">Hardware Problem</option>
+              <option value="Software Problem">Software Problem</option>
+              <option value="Project">Project</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Priority</label>
+            <div className="flex justify-between space-x-2">
+              {[1, 2, 3, 4, 5].map((level) => (
+                <label 
+                  key={level} 
+                  className="flex items-center space-x-1 cursor-pointer"
+                >
+                  <input
+                    name="priority"
+                    type="radio"
+                    onChange={handleChange}
+                    value={level}
+                    checked={formData.priority == level}
+                    className="sr-only"
+                  />
+                  <span 
+                    className={`
+                      w-8 h-8 rounded-full flex items-center justify-center
+                      ${formData.priority == level 
+                        ? 'bg-emerald-600 text-white' 
+                        : 'bg-slate-800 text-slate-400'}
+                    `}
+                  >
+                    {level}
+                  </span>
+                </label>
+              ))}
+            </div>
+          </div>
+        </div>
+
         <input
           type="submit"
-          className="btn"
-          value={EDITMODE ? "Update your Ticket" : "Create Your Ticket"}
+          className="btn w-full"
+          value="Create Your Ticket"
         />
       </form>
     </div>
