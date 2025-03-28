@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+@layer base {
+    body {
+        @apply bg-gray-950 text-gray-100;
+    }
+
+    h1, h2, h3, h4 {
+        @apply font-bold text-white;
+    }
+
+    h1 { @apply text-4xl tracking-tight; }
+    h2 { @apply text-3xl tracking-tight; }
+    h3 { @apply text-2xl tracking-tight; }
+    h4 { @apply text-xl tracking-tight; }
+
+    p {
+        @apply text-gray-300 text-sm;
+    }
+
+    form {
+        @apply rounded-2xl p-6 bg-gray-800 shadow-2xl border border-gray-700;
+    }
+
+    input, select, textarea {
+        @apply w-full bg-gray-700 border border-gray-600 focus:ring focus:ring-blue-500 focus:border-blue-500 rounded-lg p-2 text-white;
+    }
+
+    label {
+        @apply block mb-2 text-sm font-medium text-gray-300;
+    }
+}
+
+@layer components {
+    .btn {
+        @apply bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg shadow-md transition transform hover:scale-105 focus:outline-none focus:ring focus:ring-blue-500;
+    }
+
+    .icon {
+        @apply text-gray-300 hover:text-white transition-colors duration-300 text-2xl;
+    }
+}
