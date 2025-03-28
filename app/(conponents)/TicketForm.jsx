@@ -221,6 +221,8 @@ const TicketForm = ({ ticket }) => {
       latestUpdate: currentDate
     };
 
+    console.log("Submitting ticket data:", newTicketData);
+    
     try {
       const res = await fetch("/api/Tickets", {
         method: "POST",
