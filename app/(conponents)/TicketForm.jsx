@@ -27,9 +27,17 @@ const TicketForm = ({ ticket }) => {
     }
 
     try {
+      // Update latestUpdate timestamp when changing status
+      const currentDate = new Date();
+      
       const res = await fetch(`/api/Tickets/${ticket._id}`, {
         method: "PUT",
-        body: JSON.stringify({ formData: { status: newStatus } }),
+        body: JSON.stringify({ 
+          formData: { 
+            status: newStatus,
+            latestUpdate: currentDate 
+          } 
+        }),
         headers: {
           "content-type": "application/json",
         },
@@ -71,6 +79,22 @@ const TicketForm = ({ ticket }) => {
     };
 
     const statusActions = getStatusActions();
+    
+    const formatTimestamp = (timestamp) => {
+      if (!timestamp) return "Not available";
+      
+      const options = {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      };
+
+      const date = new Date(timestamp);
+      return date.toLocaleString("en-US", options);
+    };
 
     return (
       <div className="max-w-2xl mx-auto bg-slate-900 rounded-3xl border border-slate-800 shadow-2xl p-8">
@@ -116,6 +140,39 @@ const TicketForm = ({ ticket }) => {
               </div>
             </div>
           </div>
+          
+          {/* Contact information section */}
+          <div className="mt-6">
+            <h4 className="text-xl text-emerald-400 mb-3">Contact Information</h4>
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <label className="block mb-2 text-sm font-medium text-slate-400">Name</label>
+                <div className="bg-slate-800 rounded-xl p-3 text-white">
+                  {ticket.contactName || "Not provided"}
+                </div>
+              </div>
+              <div>
+                <label className="block mb-2 text-sm font-medium text-slate-400">Email</label>
+                <div className="bg-slate-800 rounded-xl p-3 text-white">
+                  {ticket.contactEmail || "Not provided"}
+                </div>
+              </div>
+              <div>
+                <label className="block mb-2 text-sm font-medium text-slate-400">Phone</label>
+                <div className="bg-slate-800 rounded-xl p-3 text-white">
+                  {ticket.contactPhone || "Not provided"}
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Latest update information */}
+          <div>
+            <label className="block mb-2 text-sm font-medium text-slate-400">Latest Update</label>
+            <div className="bg-slate-800 rounded-xl p-3 text-white">
+              {formatTimestamp(ticket.latestUpdate)}
+            </div>
+          </div>
         </div>
         
         {statusActions.length > 0 && (
@@ -156,9 +213,12 @@ const TicketForm = ({ ticket }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const currentDate = new Date();
+    
     const newTicketData = {
       ...formData,
-      status: "pending"
+      status: "pending",
+      latestUpdate: currentDate
     };
 
     try {
@@ -187,6 +247,9 @@ const TicketForm = ({ ticket }) => {
     description: "",
     priority: 1,
     category: "Hardware Problem",
+    contactName: "",
+    contactEmail: "",
+    contactPhone: "",
   });
 
   return (
@@ -266,6 +329,47 @@ const TicketForm = ({ ticket }) => {
                   </span>
                 </label>
               ))}
+            </div>
+          </div>
+        </div>
+        
+        <div className="border-t border-slate-700 pt-6">
+          <h4 className="text-xl text-emerald-400 mb-4">Contact Information</h4>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label htmlFor="contactName">Name</label>
+              <input
+                id="contactName"
+                name="contactName"
+                type="text"
+                onChange={handleChange}
+                value={formData.contactName}
+                placeholder="Your name"
+              />
+            </div>
+            
+            <div>
+              <label htmlFor="contactEmail">Email</label>
+              <input
+                id="contactEmail"
+                name="contactEmail"
+                type="email"
+                onChange={handleChange}
+                value={formData.contactEmail}
+                placeholder="your.email@example.com"
+              />
+            </div>
+            
+            <div>
+              <label htmlFor="contactPhone">Phone</label>
+              <input
+                id="contactPhone"
+                name="contactPhone"
+                type="tel"
+                onChange={handleChange}
+                value={formData.contactPhone}
+                placeholder="(123) 456-7890"
+              />
             </div>
           </div>
         </div>

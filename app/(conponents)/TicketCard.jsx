@@ -2,10 +2,12 @@ import Link from "next/link";
 import PriorityDisplay from "./PriorityDisplay";
 import StatusDisplay from "./StatusDisplay";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTag, faClock } from "@fortawesome/free-solid-svg-icons";
+import { faTag, faClock, faUser, faEnvelope, faPhone, faHistory } from "@fortawesome/free-solid-svg-icons";
 
 const TicketCard = ({ ticket }) => {
   const formatTimestamp = (timestamp) => {
+    if (!timestamp) return null;
+    
     const options = {
       year: "numeric",
       month: "short",
@@ -18,6 +20,9 @@ const TicketCard = ({ ticket }) => {
     const date = new Date(timestamp);
     return date.toLocaleString("en-US", options);
   };
+
+  // Determine if we have contact information
+  const hasContactInfo = ticket.contactName || ticket.contactEmail || ticket.contactPhone;
 
   return (
     <div className="group transform transition-all duration-300 hover:-translate-y-2 perspective-1000">
@@ -50,16 +55,55 @@ const TicketCard = ({ ticket }) => {
               {ticket.description}
             </p>
 
+            {/* Contact information */}
+            {hasContactInfo && (
+              <div className="mb-4 bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+                <h5 className="text-sm font-medium text-emerald-400 mb-2">Contact Info</h5>
+                <div className="grid grid-cols-1 gap-2 text-xs">
+                  {ticket.contactName && (
+                    <div className="flex items-center text-slate-300">
+                      <FontAwesomeIcon icon={faUser} className="w-3 h-3 mr-2 text-emerald-500" />
+                      <span>{ticket.contactName}</span>
+                    </div>
+                  )}
+                  
+                  {ticket.contactEmail && (
+                    <div className="flex items-center text-slate-300">
+                      <FontAwesomeIcon icon={faEnvelope} className="w-3 h-3 mr-2 text-emerald-500" />
+                      <span className="truncate">{ticket.contactEmail}</span>
+                    </div>
+                  )}
+                  
+                  {ticket.contactPhone && (
+                    <div className="flex items-center text-slate-300">
+                      <FontAwesomeIcon icon={faPhone} className="w-3 h-3 mr-2 text-emerald-500" />
+                      <span>{ticket.contactPhone}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* Additional info section */}
-            <div className="flex items-center justify-between text-xs text-slate-400 space-x-4">
-              <div className="flex items-center space-x-2">
-                <FontAwesomeIcon icon={faClock} className="w-4 h-4 text-emerald-500" />
-                <span>{formatTimestamp(ticket.createdAt)}</span>
+            <div className="flex flex-col space-y-2 text-xs text-slate-400">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <FontAwesomeIcon icon={faClock} className="w-4 h-4 text-emerald-500" />
+                  <span>Created: {formatTimestamp(ticket.createdAt)}</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <FontAwesomeIcon icon={faTag} className="w-4 h-4 text-emerald-500" />
+                  <span className="font-medium">{ticket.category}</span>
+                </div>
               </div>
-              <div className="flex items-center space-x-2">
-                <FontAwesomeIcon icon={faTag} className="w-4 h-4 text-emerald-500" />
-                <span className="font-medium">{ticket.category}</span>
-              </div>
+              
+              {/* Latest update timestamp */}
+              {ticket.latestUpdate && (
+                <div className="flex items-center space-x-2 text-emerald-300 font-medium">
+                  <FontAwesomeIcon icon={faHistory} className="w-4 h-4 text-emerald-500" />
+                  <span>Last updated: {formatTimestamp(ticket.latestUpdate)}</span>
+                </div>
+              )}
             </div>
           </div>
         </div>

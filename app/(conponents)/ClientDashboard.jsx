@@ -1,25 +1,40 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TicketCard from "./TicketCard";
 
 const ClientDashboard = ({ initialTickets }) => {
+  const [tickets, setTickets] = useState(initialTickets || []);
   const [selectedStatus, setSelectedStatus] = useState(null);
+
+  // Log tickets on component mount
+  useEffect(() => {
+    console.log("Initial tickets received:", initialTickets);
+  }, [initialTickets]);
 
   // Determine unique statuses and categories
   const uniqueStatuses = [
-    ...new Set(initialTickets?.map(({ status }) => status)),
+    ...new Set(tickets?.map(({ status }) => status).filter(Boolean)),
   ];
   const uniqueCategories = [
-    ...new Set(initialTickets?.map(({ category }) => category)),
+    ...new Set(tickets?.map(({ category }) => category).filter(Boolean)),
   ];
 
   // Filter tickets based on category and status
   const getFilteredTickets = (category) => {
-    return initialTickets
+    return tickets
       .filter((ticket) => ticket.category === category)
       .filter((ticket) => !selectedStatus || ticket.status === selectedStatus);
   };
+
+  // Render nothing if no tickets
+  if (!tickets || tickets.length === 0) {
+    return (
+      <div className="text-center text-slate-400 py-10">
+        No tickets found. Create a new ticket to get started.
+      </div>
+    );
+  }
 
   // Status color mapping with dark blue theme
   const getStatusColor = (status, isSelected) => {
@@ -56,7 +71,7 @@ const ClientDashboard = ({ initialTickets }) => {
       </div>
 
       <div>
-        {initialTickets &&
+        {tickets &&
           uniqueCategories?.map((uniqueCategory, categoryIndex) => {
             const filteredTickets = getFilteredTickets(uniqueCategory);
 
