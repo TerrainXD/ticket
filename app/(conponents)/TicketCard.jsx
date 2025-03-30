@@ -55,36 +55,8 @@ const TicketCard = ({ ticket }) => {
               {ticket.description}
             </p>
 
-            {/* Contact information */}
-            {hasContactInfo && (
-              <div className="mb-4 bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-                <h5 className="text-sm font-medium text-emerald-400 mb-2">Contact Info</h5>
-                <div className="grid grid-cols-1 gap-2 text-xs">
-                  {ticket.contactName && (
-                    <div className="flex items-center text-slate-300">
-                      <FontAwesomeIcon icon={faUser} className="w-3 h-3 mr-2 text-emerald-500" />
-                      <span>{ticket.contactName}</span>
-                    </div>
-                  )}
-                  
-                  {ticket.contactEmail && (
-                    <div className="flex items-center text-slate-300">
-                      <FontAwesomeIcon icon={faEnvelope} className="w-3 h-3 mr-2 text-emerald-500" />
-                      <span className="truncate">{ticket.contactEmail}</span>
-                    </div>
-                  )}
-                  
-                  {ticket.contactPhone && (
-                    <div className="flex items-center text-slate-300">
-                      <FontAwesomeIcon icon={faPhone} className="w-3 h-3 mr-2 text-emerald-500" />
-                      <span>{ticket.contactPhone}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
+          
 
-            {/* Additional info section */}
             <div className="flex flex-col space-y-2 text-xs text-slate-400">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
@@ -97,7 +69,6 @@ const TicketCard = ({ ticket }) => {
                 </div>
               </div>
               
-              {/* Latest update timestamp */}
               {ticket.latestUpdate && (
                 <div className="flex items-center space-x-2 text-emerald-300 font-medium">
                   <FontAwesomeIcon icon={faHistory} className="w-4 h-4 text-emerald-500" />
