@@ -3,18 +3,20 @@
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheckCircle, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCheckCircle,
+  faTimesCircle,
+} from "@fortawesome/free-solid-svg-icons";
 
 const TicketForm = ({ ticket }) => {
   const EDITMODE = ticket._id === "new" ? false : true;
   const router = useRouter();
 
-  // Updated status progression
   const STATUS_PROGRESSION = {
-    'pending': ['accepted', 'rejected'],
-    'accepted': ['resolved'],
-    'resolved': [], // No further status changes allowed
-    'rejected': []
+    pending: ["accepted", "rejected"],
+    accepted: ["resolved"],
+    resolved: [],
+    rejected: [],
   };
 
   const handleStatusUpdate = async (newStatus) => {
@@ -27,16 +29,16 @@ const TicketForm = ({ ticket }) => {
     }
 
     try {
-      // Update latestUpdate timestamp when changing status
+      // Update latestUpdate
       const currentDate = new Date();
-      
+
       const res = await fetch(`/api/Tickets/${ticket._id}`, {
         method: "PUT",
-        body: JSON.stringify({ 
-          formData: { 
+        body: JSON.stringify({
+          formData: {
             status: newStatus,
-            latestUpdate: currentDate 
-          } 
+            latestUpdate: currentDate,
+          },
         }),
         headers: {
           "content-type": "application/json",
@@ -55,34 +57,47 @@ const TicketForm = ({ ticket }) => {
     }
   };
 
-  // If not creating a new ticket, show read-only view
   if (EDITMODE) {
-    // Determine available actions based on current status
     const getStatusActions = () => {
-      switch(ticket.status) {
-        case 'pending':
+      switch (ticket.status) {
+        case "pending":
           return [
-            { status: 'accepted', label: 'Accept', icon: faCheckCircle, className: 'bg-emerald-600 hover:bg-emerald-700' },
-            { status: 'rejected', label: 'Reject', icon: faTimesCircle, className: 'bg-red-600 hover:bg-red-700' }
+            {
+              status: "accepted",
+              label: "Accept",
+              icon: faCheckCircle,
+              className: "bg-emerald-600 hover:bg-emerald-700",
+            },
+            {
+              status: "rejected",
+              label: "Reject",
+              icon: faTimesCircle,
+              className: "bg-red-600 hover:bg-red-700",
+            },
           ];
-        case 'accepted':
+        case "accepted":
           return [
-            { status: 'resolved', label: 'Resolve', icon: faCheckCircle, className: 'bg-emerald-600 hover:bg-emerald-700' }
+            {
+              status: "resolved",
+              label: "Resolve",
+              icon: faCheckCircle,
+              className: "bg-emerald-600 hover:bg-emerald-700",
+            },
           ];
-        case 'resolved':
-          return []; // No actions for resolved tickets
-        case 'rejected':
-          return []; // No actions for rejected tickets
+        case "resolved":
+          return [];
+        case "rejected":
+          return [];
         default:
           return [];
       }
     };
 
     const statusActions = getStatusActions();
-    
+
     const formatTimestamp = (timestamp) => {
       if (!timestamp) return "Not available";
-      
+
       const options = {
         year: "numeric",
         month: "short",
@@ -101,80 +116,108 @@ const TicketForm = ({ ticket }) => {
         <h3 className="text-2xl text-white mb-6 pb-3 border-b border-slate-700">
           Ticket Details
         </h3>
-        
+
         <div className="space-y-4">
           <div>
-            <label className="block mb-2 text-sm font-medium text-slate-400">Title</label>
-            <div className="bg-slate-800 rounded-xl p-3 text-white">{ticket.title}</div>
+            <label className="block mb-2 text-sm font-medium text-slate-400">
+              Title
+            </label>
+            <div className="bg-slate-800 rounded-xl p-3 text-white">
+              {ticket.title}
+            </div>
           </div>
-          
+
           <div>
-            <label className="block mb-2 text-sm font-medium text-slate-400">Description</label>
+            <label className="block mb-2 text-sm font-medium text-slate-400">
+              Description
+            </label>
             <div className="bg-slate-800 rounded-xl p-3 text-white min-h-[100px]">
               {ticket.description}
             </div>
           </div>
-          
+
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block mb-2 text-sm font-medium text-slate-400">Category</label>
-              <div className="bg-slate-800 rounded-xl p-3 text-white">{ticket.category}</div>
+              <label className="block mb-2 text-sm font-medium text-slate-400">
+                Category
+              </label>
+              <div className="bg-slate-800 rounded-xl p-3 text-white">
+                {ticket.category}
+              </div>
             </div>
-            
+
             <div>
-              <label className="block mb-2 text-sm font-medium text-slate-400">Current Status</label>
-              <div className="bg-slate-800 rounded-xl p-3 text-white">{ticket.status}</div>
+              <label className="block mb-2 text-sm font-medium text-slate-400">
+                Current Status
+              </label>
+              <div className="bg-slate-800 rounded-xl p-3 text-white">
+                {ticket.status}
+              </div>
             </div>
           </div>
-          
+
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block mb-2 text-sm font-medium text-slate-400">Priority</label>
-              <div className="bg-slate-800 rounded-xl p-3 text-white">{ticket.priority}</div>
+              <label className="block mb-2 text-sm font-medium text-slate-400">
+                Priority
+              </label>
+              <div className="bg-slate-800 rounded-xl p-3 text-white">
+                {ticket.priority}
+              </div>
             </div>
-            
+
             <div>
-              <label className="block mb-2 text-sm font-medium text-slate-400">Created At</label>
+              <label className="block mb-2 text-sm font-medium text-slate-400">
+                Created At
+              </label>
               <div className="bg-slate-800 rounded-xl p-3 text-white">
                 {new Date(ticket.createdAt).toLocaleString()}
               </div>
             </div>
           </div>
-          
-          {/* Contact information section */}
+
           <div className="mt-6">
-            <h4 className="text-xl text-emerald-400 mb-3">Contact Information</h4>
+            <h4 className="text-xl text-emerald-400 mb-3">
+              Contact Information
+            </h4>
             <div className="grid grid-cols-3 gap-4">
               <div>
-                <label className="block mb-2 text-sm font-medium text-slate-400">Name</label>
+                <label className="block mb-2 text-sm font-medium text-slate-400">
+                  Name
+                </label>
                 <div className="bg-slate-800 rounded-xl p-3 text-white">
                   {ticket.contactName || "Not provided"}
                 </div>
               </div>
               <div>
-                <label className="block mb-2 text-sm font-medium text-slate-400">Email</label>
+                <label className="block mb-2 text-sm font-medium text-slate-400">
+                  Email
+                </label>
                 <div className="bg-slate-800 rounded-xl p-3 text-white">
                   {ticket.contactEmail || "Not provided"}
                 </div>
               </div>
               <div>
-                <label className="block mb-2 text-sm font-medium text-slate-400">Phone</label>
+                <label className="block mb-2 text-sm font-medium text-slate-400">
+                  Phone
+                </label>
                 <div className="bg-slate-800 rounded-xl p-3 text-white">
                   {ticket.contactPhone || "Not provided"}
                 </div>
               </div>
             </div>
           </div>
-          
-          {/* Latest update information */}
+
           <div>
-            <label className="block mb-2 text-sm font-medium text-slate-400">Latest Update</label>
+            <label className="block mb-2 text-sm font-medium text-slate-400">
+              Latest Update
+            </label>
             <div className="bg-slate-800 rounded-xl p-3 text-white">
               {formatTimestamp(ticket.latestUpdate)}
             </div>
           </div>
         </div>
-        
+
         {statusActions.length > 0 && (
           <div className="mt-8 flex justify-center space-x-4">
             {statusActions.map((action) => (
@@ -187,10 +230,7 @@ const TicketForm = ({ ticket }) => {
                   ${action.className} text-white
                 `}
               >
-                <FontAwesomeIcon 
-                  icon={action.icon} 
-                  className="mr-2" 
-                />
+                <FontAwesomeIcon icon={action.icon} className="mr-2" />
                 {action.label}
               </button>
             ))}
@@ -214,15 +254,15 @@ const TicketForm = ({ ticket }) => {
     e.preventDefault();
 
     const currentDate = new Date();
-    
+
     const newTicketData = {
       ...formData,
       status: "pending",
-      latestUpdate: currentDate
+      latestUpdate: currentDate,
     };
 
     console.log("Submitting ticket data:", newTicketData);
-    
+
     try {
       const res = await fetch("/api/Tickets", {
         method: "POST",
@@ -262,7 +302,7 @@ const TicketForm = ({ ticket }) => {
         onSubmit={handleSubmit}
       >
         <h3 className="text-center">Create Your Ticket</h3>
-        
+
         <div>
           <label htmlFor="title">Title</label>
           <input
@@ -307,8 +347,8 @@ const TicketForm = ({ ticket }) => {
             <label>Priority</label>
             <div className="flex justify-between space-x-2">
               {[1, 2, 3, 4, 5].map((level) => (
-                <label 
-                  key={level} 
+                <label
+                  key={level}
                   className="flex items-center space-x-1 cursor-pointer"
                 >
                   <input
@@ -319,12 +359,14 @@ const TicketForm = ({ ticket }) => {
                     checked={formData.priority == level}
                     className="sr-only"
                   />
-                  <span 
+                  <span
                     className={`
                       w-8 h-8 rounded-full flex items-center justify-center
-                      ${formData.priority == level 
-                        ? 'bg-emerald-600 text-white' 
-                        : 'bg-slate-800 text-slate-400'}
+                      ${
+                        formData.priority == level
+                          ? "bg-emerald-600 text-white"
+                          : "bg-slate-800 text-slate-400"
+                      }
                     `}
                   >
                     {level}
@@ -334,7 +376,7 @@ const TicketForm = ({ ticket }) => {
             </div>
           </div>
         </div>
-        
+
         <div className="border-t border-slate-700 pt-6">
           <h4 className="text-xl text-emerald-400 mb-4">Contact Information</h4>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -349,7 +391,7 @@ const TicketForm = ({ ticket }) => {
                 placeholder="Your name"
               />
             </div>
-            
+
             <div>
               <label htmlFor="contactEmail">Email</label>
               <input
@@ -361,7 +403,7 @@ const TicketForm = ({ ticket }) => {
                 placeholder="your.email@example.com"
               />
             </div>
-            
+
             <div>
               <label htmlFor="contactPhone">Phone</label>
               <input

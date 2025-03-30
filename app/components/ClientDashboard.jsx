@@ -7,12 +7,10 @@ const ClientDashboard = ({ initialTickets }) => {
   const [tickets, setTickets] = useState(initialTickets || []);
   const [selectedStatus, setSelectedStatus] = useState(null);
 
-  // Log tickets on component mount
   useEffect(() => {
     console.log("Initial tickets received:", initialTickets);
   }, [initialTickets]);
 
-  // Determine unique statuses and categories
   const uniqueStatuses = [
     ...new Set(tickets?.map(({ status }) => status).filter(Boolean)),
   ];
@@ -20,14 +18,13 @@ const ClientDashboard = ({ initialTickets }) => {
     ...new Set(tickets?.map(({ category }) => category).filter(Boolean)),
   ];
 
-  // Filter tickets based on category and status
+  // Filter tickets by category and status
   const getFilteredTickets = (category) => {
     return tickets
       .filter((ticket) => ticket.category === category)
       .filter((ticket) => !selectedStatus || ticket.status === selectedStatus);
   };
 
-  // Render nothing if no tickets
   if (!tickets || tickets.length === 0) {
     return (
       <div className="text-center text-slate-400 py-10">
@@ -36,7 +33,6 @@ const ClientDashboard = ({ initialTickets }) => {
     );
   }
 
-  // Status color mapping with dark blue theme
   const getStatusColor = (status, isSelected) => {
     const baseColors = {
       pending: "bg-red-800 text-white",
@@ -52,7 +48,6 @@ const ClientDashboard = ({ initialTickets }) => {
 
   return (
     <div className="p-6 md:p-8 lg:p-10">
-      {/* Status Filter Buttons */}
       <div className="flex justify-center mb-8 space-x-4">
         {uniqueStatuses.map((status) => (
           <button
@@ -75,7 +70,6 @@ const ClientDashboard = ({ initialTickets }) => {
           uniqueCategories?.map((uniqueCategory, categoryIndex) => {
             const filteredTickets = getFilteredTickets(uniqueCategory);
 
-            // Only render category if it has tickets after filtering
             if (filteredTickets.length === 0) return null;
 
             return (
