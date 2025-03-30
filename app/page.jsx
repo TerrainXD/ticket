@@ -18,7 +18,6 @@ const getTickets = async () => {
     const data = await res.json();
     console.log("Fetched tickets:", data);
     
-    // Validate tickets structure
     if (!data || !data.tickets) {
       console.error("Unexpected data structure:", data);
       return { tickets: [] };
