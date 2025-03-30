@@ -1,4 +1,4 @@
-import TicketForm from "@/app/(conponents)/TicketForm";
+import TicketForm from "@/app/components/TicketForm";
 
 const getTicketById = async (id) => {
   const res = await fetch(`http://localhost:3000/api/Tickets/${id}`, {
@@ -11,7 +11,7 @@ const getTicketById = async (id) => {
 };
 
 const TicketPage = async ({ params }) => {
-    const id = (await params)?.id;
+  const id = (await params)?.id;
   const EDITMODE = id === "new" ? false : true;
 
   let updateTicketData = {};

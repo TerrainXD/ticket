@@ -1,4 +1,4 @@
-import Ticket from "@/app/(models)/Ticket";
+import Ticket from "@/app/models/Ticket";
 import { NextResponse } from "next/server";
 
 export async function GET(req, { params }) {
@@ -11,8 +11,6 @@ export async function GET(req, { params }) {
     return NextResponse.json({ message: "Error", error }, { status: 500 });
   }
 }
-
-
 
 export async function PUT(req, { params }) {
   try {

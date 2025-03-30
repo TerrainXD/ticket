@@ -1,14 +1,14 @@
-import ClientDashboard from "./(conponents)/ClientDashboard";
+import ClientDashboard from "./components/ClientDashboard";
 
 const getTickets = async () => {
   try {
     console.log("Fetching tickets from API");
     const res = await fetch("http://localhost:3000/api/Tickets", {
-      cache: "no-store"
+      cache: "no-store",
     });
 
     console.log("Fetch response status:", res.status);
-    
+
     if (!res.ok) {
       const errorText = await res.text();
       console.error("Error fetching tickets:", errorText);
@@ -17,7 +17,7 @@ const getTickets = async () => {
 
     const data = await res.json();
     console.log("Fetched tickets:", data);
-    
+
     if (!data || !data.tickets) {
       console.error("Unexpected data structure:", data);
       return { tickets: [] };
@@ -31,7 +31,7 @@ const getTickets = async () => {
 };
 
 const Dashboard = async () => {
-  const {tickets} = await getTickets();
+  const { tickets } = await getTickets();
 
   console.log("Rendering Dashboard with tickets:", tickets);
 
