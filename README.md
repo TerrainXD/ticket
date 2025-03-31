@@ -31,7 +31,7 @@ Database: MongoDB with Mongoose
 
 Installation
 ```
-git clone[ https://github.com/your-username/helpdesk-ticket.git](https://github.com/TerrainXD/ticket.git)
+git clone https://github.com/TerrainXD/ticket.git
 cd ticket
 ```
 
