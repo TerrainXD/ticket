@@ -1,7 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import TicketStats from "@/app/components/TicketStat";
 
-// Mock the FontAwesomeIcon component
 jest.mock("@fortawesome/react-fontawesome", () => ({
   FontAwesomeIcon: () => <div data-testid="mock-icon" />
 }));
@@ -59,28 +58,23 @@ describe("TicketStats Component", () => {
   it("displays the correct status counts", () => {
     render(<TicketStats tickets={mockTickets} />);
     
-    // Check for status labels
     expect(screen.getByText("pending Tickets")).toBeInTheDocument();
     expect(screen.getByText("accepted Tickets")).toBeInTheDocument();
     expect(screen.getByText("resolved Tickets")).toBeInTheDocument();
     expect(screen.getByText("rejected Tickets")).toBeInTheDocument();
     
-    // Check for counts
     const countElements = screen.getAllByText(/[0-9]/);
     expect(countElements).toHaveLength(5); // Total + 4 statuses
     
-    // Find the pending count (should be 1)
     const pendingElement = screen.getByText("pending Tickets").closest("div").parentElement;
     expect(pendingElement).toHaveTextContent("1");
     
-    // Find the accepted count (should be 2)
     const acceptedElement = screen.getByText("accepted Tickets").closest("div").parentElement;
     expect(acceptedElement).toHaveTextContent("2");
   });
 
   it("renders the correct number of status cards", () => {
     render(<TicketStats tickets={mockTickets} />);
-    // 5 cards: 1 for total + 4 for statuses
     const iconElements = screen.getAllByTestId("mock-icon");
     expect(iconElements).toHaveLength(5);
   });
@@ -92,6 +86,6 @@ describe("TicketStats Component", () => {
     ];
     
     render(<TicketStats tickets={ticketsWithMissingStatus} />);
-    expect(screen.getByText("6")).toBeInTheDocument(); // Total tickets should be 6
+    expect(screen.getByText("6")).toBeInTheDocument(); 
   });
 });

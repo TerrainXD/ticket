@@ -12,7 +12,6 @@ const TicketStats = ({ tickets }) => {
     return null;
   }
 
-  // Calculate ticket counts
   const totalTickets = tickets.length;
 
   const statusCounts = tickets.reduce((counts, ticket) => {
