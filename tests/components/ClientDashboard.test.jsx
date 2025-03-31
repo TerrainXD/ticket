@@ -11,6 +11,16 @@ jest.mock("@/app/components/TicketCard", () => {
   };
 });
 
+jest.mock("@/app/components/TicketStat", () => {
+  return function MockTicketStat({ tickets }) {
+    return (
+      <div data-testid="mock-ticket-stat">
+        Total tickets: {tickets.length}
+      </div>
+    );
+  };
+});
+
 describe("ClientDashboard Component", () => {
   const mockTickets = [
     {
@@ -48,6 +58,12 @@ describe("ClientDashboard Component", () => {
     render(<ClientDashboard initialTickets={mockTickets} />);
     const ticketCards = screen.getAllByTestId("mock-ticket-card");
     expect(ticketCards).toHaveLength(3);
+  });
+
+  it("renders the TicketStat component with tickets", () => {
+    render(<ClientDashboard initialTickets={mockTickets} />);
+    expect(screen.getByTestId("mock-ticket-stat")).toBeInTheDocument();
+    expect(screen.getByText("Total tickets: 3")).toBeInTheDocument();
   });
 
   it("displays status filter buttons for unique statuses", () => {

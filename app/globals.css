@@ -1,85 +1,98 @@
 @import "tailwindcss";
 
 @layer base {
-    body {
-        @apply bg-slate-950 text-slate-100 selection:bg-emerald-600/50;
-    }
+  body {
+    @apply bg-slate-950 text-slate-100 selection:bg-emerald-600/50;
+  }
 
-    h1, h2, h3, h4 {
-        @apply font-bold text-white tracking-tight leading-tight;
-    }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-bold text-white tracking-tight leading-tight;
+  }
 
-    h1 { @apply text-4xl text-slate-100 mb-6; }
-    h2 { 
-        @apply text-3xl text-emerald-200 border-b border-slate-800 pb-3 mb-6 
+  h1 {
+    @apply text-4xl text-slate-100 mb-6;
+  }
+  h2 {
+    @apply text-3xl text-emerald-200 border-b border-slate-800 pb-3 mb-6 
         bg-gradient-to-r from-emerald-700/20 to-transparent px-4 -mx-4 rounded-lg;
-    }
-    h3 { @apply text-2xl text-slate-100 mb-4; }
-    h4 { @apply text-xl text-slate-100; }
+  }
+  h3 {
+    @apply text-2xl text-slate-100 mb-4;
+  }
+  h4 {
+    @apply text-xl text-slate-100;
+  }
 
-    p {
-        @apply text-slate-300 text-base leading-relaxed;
-    }
+  p {
+    @apply text-slate-300 text-base leading-relaxed;
+  }
 
-    form {
-        @apply rounded-3xl p-8 bg-slate-900 shadow-2xl border border-slate-800 
+  form {
+    @apply rounded-3xl p-8 bg-slate-900 shadow-2xl border border-slate-800 
         relative overflow-hidden backdrop-blur-sm;
-    }
+  }
 
-    input, select, textarea {
-        @apply w-full bg-slate-800 border border-slate-700 
+  input,
+  select,
+  textarea {
+    @apply w-full bg-slate-800 border border-slate-700 
         focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 
         rounded-xl p-3 text-white transition-all duration-300;
-    }
+  }
 
-    label {
-        @apply block mb-2 text-sm font-medium text-slate-400;
-    }
+  label {
+    @apply block mb-2 text-sm font-medium text-slate-400;
+  }
 }
 
 @layer components {
-    .btn {
-        @apply bg-emerald-600 hover:bg-emerald-700 text-white font-semibold 
+  .btn {
+    @apply bg-emerald-600 hover:bg-emerald-700 text-white font-semibold 
         py-3 rounded-xl shadow-lg transition transform hover:scale-[1.02] 
         focus:outline-none focus:ring-2 focus:ring-emerald-500/50 hover:shadow-xl;
-    }
+  }
 
-    .icon {
-        @apply text-slate-300 hover:text-white transition-colors duration-300 text-2xl;
-    }
+  .icon {
+    @apply text-slate-300 hover:text-white transition-colors duration-300 text-2xl;
+  }
 }
 
 body::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0.03;
-    background-image: 
-        radial-gradient(rgba(20,184,166,0.05) 1px, transparent 1px),
-        radial-gradient(rgba(20,184,166,0.05) 1px, transparent 1px);
-    background-size: 50px 50px;
-    background-position: 0 0, 25px 25px;
-    pointer-events: none;
-    z-index: -1;
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.03;
+  background-image: radial-gradient(
+      rgba(20, 184, 166, 0.05) 1px,
+      transparent 1px
+    ),
+    radial-gradient(rgba(20, 184, 166, 0.05) 1px, transparent 1px);
+  background-size: 50px 50px;
+  background-position: 0 0, 25px 25px;
+  pointer-events: none;
+  z-index: -1;
 }
 
 body {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(16,185,129,0.5) transparent;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(16, 185, 129, 0.5) transparent;
 }
 
 body::-webkit-scrollbar {
-    width: 10px;
+  width: 10px;
 }
 
 body::-webkit-scrollbar-track {
-    background: transparent;
+  background: transparent;
 }
 
 body::-webkit-scrollbar-thumb {
-    background-color: rgba(16,185,129,0.5);
-    border-radius: 20px;
+  background-color: rgba(16, 185, 129, 0.5);
+  border-radius: 20px;
 }

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import TicketCard from "./TicketCard";
+import TicketStat from "./TicketStat";
 
 const ClientDashboard = ({ initialTickets }) => {
   const [tickets, setTickets] = useState(initialTickets || []);
@@ -48,6 +49,9 @@ const ClientDashboard = ({ initialTickets }) => {
 
   return (
     <div className="p-6 md:p-8 lg:p-10">
+      {/* Add the TicketStats component at the top */}
+      <TicketStat tickets={tickets} />
+
       <div className="flex justify-center mb-8 space-x-4">
         {uniqueStatuses.map((status) => (
           <button
