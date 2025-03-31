@@ -4,12 +4,10 @@ import { useRouter } from "next/navigation";
 
 TicketForm;
 
-// Mock next/navigation
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
 }));
 
-// Mock FontAwesomeIcon
 jest.mock("@fortawesome/react-fontawesome", () => ({
   FontAwesomeIcon: function MockFontAwesomeIcon(props) {
     return <i data-testid="mock-icon" className={props.className}></i>;
@@ -79,12 +77,10 @@ describe("TicketForm Component", () => {
         target: { value: "Test description" },
       });
 
-      // Use getByRole to select the button more reliably
       fireEvent.click(
         await screen.findByRole("button", { name: /create your ticket/i })
       );
 
-      // Wait for fetch to be called
       await waitFor(() => {
         expect(global.fetch).toHaveBeenCalledWith("/api/Tickets", {
           method: "POST",
@@ -95,15 +91,13 @@ describe("TicketForm Component", () => {
         });
       });
 
-      // Verify router was called to redirect
       expect(mockRouter.refresh).toHaveBeenCalled();
       expect(mockRouter.push).toHaveBeenCalledWith("/");
     });
 
     it("shows error on failed submission", async () => {
-      // Mock failed fetch response
       global.fetch.mockResolvedValueOnce({
-        ok: false, // Simulate failure
+        ok: false,
       });
 
       // Fill and submit form
@@ -117,7 +111,6 @@ describe("TicketForm Component", () => {
         await screen.findByRole("button", { name: /create your ticket/i })
       );
 
-      // Wait for alert to be called
       await waitFor(() => {
         expect(global.alert).toHaveBeenCalledWith("Failed to create ticket.");
       });
@@ -141,10 +134,8 @@ describe("TicketForm Component", () => {
     it("renders ticket details in read-only mode", () => {
       render(<TicketForm ticket={mockExistingTicket} />);
 
-      // Check that we're in read-only mode
       expect(screen.getByText("Ticket Details")).toBeInTheDocument();
 
-      // Check ticket info is displayed
       expect(screen.getByText("Existing Ticket")).toBeInTheDocument();
       expect(
         screen.getByText("This is an existing ticket")
@@ -159,13 +150,11 @@ describe("TicketForm Component", () => {
     it("shows the correct action buttons for pending status", () => {
       render(<TicketForm ticket={mockExistingTicket} />);
 
-      // For pending status, should have Accept and Reject buttons
       expect(screen.getByText("Accept")).toBeInTheDocument();
       expect(screen.getByText("Reject")).toBeInTheDocument();
     });
 
     it("updates status when Accept button is clicked", async () => {
-      // Mock successful fetch response
       global.fetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({ message: "Ticket Updated" }),
@@ -173,10 +162,8 @@ describe("TicketForm Component", () => {
 
       render(<TicketForm ticket={mockExistingTicket} />);
 
-      // Click Accept button
       fireEvent.click(screen.getByText("Accept"));
 
-      // Wait for fetch to be called with correct data
       await waitFor(() => {
         expect(global.fetch).toHaveBeenCalledWith(`/api/Tickets/123`, {
           method: "PUT",
@@ -187,7 +174,6 @@ describe("TicketForm Component", () => {
         });
       });
 
-      // Verify router was called
       expect(mockRouter.refresh).toHaveBeenCalled();
       expect(mockRouter.push).toHaveBeenCalledWith("/");
     });
@@ -196,7 +182,6 @@ describe("TicketForm Component", () => {
       const acceptedTicket = { ...mockExistingTicket, status: "accepted" };
       render(<TicketForm ticket={acceptedTicket} />);
 
-      // For accepted status, should only have Resolve button
       expect(screen.getByText("Resolve")).toBeInTheDocument();
       expect(screen.queryByText("Accept")).not.toBeInTheDocument();
       expect(screen.queryByText("Reject")).not.toBeInTheDocument();
@@ -206,24 +191,20 @@ describe("TicketForm Component", () => {
       const resolvedTicket = { ...mockExistingTicket, status: "resolved" };
       render(<TicketForm ticket={resolvedTicket} />);
 
-      // For resolved status, should have no action buttons
       expect(screen.queryByText("Resolve")).not.toBeInTheDocument();
       expect(screen.queryByText("Accept")).not.toBeInTheDocument();
       expect(screen.queryByText("Reject")).not.toBeInTheDocument();
     });
 
     it("shows error when status update fails", async () => {
-      // Mock failed fetch response
       global.fetch.mockResolvedValueOnce({
         ok: false,
       });
 
       render(<TicketForm ticket={mockExistingTicket} />);
 
-      // Click Accept button
       fireEvent.click(screen.getByText("Accept"));
 
-      // Wait for alert to be called
       await waitFor(() => {
         expect(global.alert).toHaveBeenCalledWith(
           "Failed to update ticket status."

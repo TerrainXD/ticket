@@ -67,17 +67,14 @@ describe("ClientDashboard Component", () => {
   it("filters tickets by status when status button is clicked", () => {
     render(<ClientDashboard initialTickets={mockTickets} />);
 
-    // Click on "pending" status filter
     fireEvent.click(screen.getByText("pending"));
 
-    // Should now only show 1 ticket with "pending" status
     const ticketCards = screen.getAllByTestId("mock-ticket-card");
     expect(ticketCards).toHaveLength(1);
     expect(ticketCards[0]).toHaveTextContent(
       "Hardware Issue - pending - Hardware Problem"
     );
 
-    // Hardware Problem category should still be visible but Software Problem and Project categories should be gone
     expect(screen.getByText("Hardware Problem")).toBeInTheDocument();
     expect(screen.queryByText("Software Problem")).not.toBeInTheDocument();
     expect(screen.queryByText("Project")).not.toBeInTheDocument();
@@ -86,16 +83,12 @@ describe("ClientDashboard Component", () => {
   it("clears filter when the same status button is clicked again", () => {
     render(<ClientDashboard initialTickets={mockTickets} />);
 
-    // Click pending filter
     fireEvent.click(screen.getByText("pending"));
 
-    // Should now have 1 ticket
     expect(screen.getAllByTestId("mock-ticket-card")).toHaveLength(1);
 
-    // Click pending again to clear filter
     fireEvent.click(screen.getByText("pending"));
 
-    // Should now show all 3 tickets again
     expect(screen.getAllByTestId("mock-ticket-card")).toHaveLength(3);
     expect(screen.getByText("Hardware Problem")).toBeInTheDocument();
     expect(screen.getByText("Software Problem")).toBeInTheDocument();
@@ -103,19 +96,16 @@ describe("ClientDashboard Component", () => {
   });
 
   it("calls console.log with initial tickets on mount", () => {
-    // Mock console.log
     const originalConsoleLog = console.log;
     console.log = jest.fn();
 
     render(<ClientDashboard initialTickets={mockTickets} />);
 
-    // Check that console.log was called with initial tickets
     expect(console.log).toHaveBeenCalledWith(
       "Initial tickets received:",
       mockTickets
     );
 
-    // Restore original console.log
     console.log = originalConsoleLog;
   });
 });

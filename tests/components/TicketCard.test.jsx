@@ -2,7 +2,6 @@ import TicketCard from "@/app/components/TicketCard";
 import { render, screen } from "@testing-library/react";
 TicketCard;
 
-// Mock child components
 jest.mock("@/app/components/StatusDisplay", () => {
   return function MockStatusDisplay({ status }) {
     return <div data-testid="mock-status">{status}</div>;
@@ -15,14 +14,12 @@ jest.mock("@/app/components/PriorityDisplay", () => {
   };
 });
 
-// Mock next/link
 jest.mock("next/link", () => {
   return ({ children, href }) => {
     return <a href={href}>{children}</a>;
   };
 });
 
-// Mock FontAwesomeIcon
 jest.mock("@fortawesome/react-fontawesome", () => ({
   FontAwesomeIcon: function MockFontAwesomeIcon(props) {
     return <span data-testid="mock-icon" className={props.className}></span>;
@@ -73,7 +70,6 @@ describe("TicketCard Component", () => {
 
   it("formats and displays creation date correctly", () => {
     render(<TicketCard ticket={mockTicket} />);
-    // The exact formatted string will depend on the user's locale, so we just check for presence of date
     expect(screen.getByText(/Created:/)).toBeInTheDocument();
   });
 
