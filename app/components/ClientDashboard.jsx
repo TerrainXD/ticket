@@ -19,7 +19,6 @@ const ClientDashboard = ({ initialTickets }) => {
     ...new Set(tickets?.map(({ category }) => category).filter(Boolean)),
   ];
 
-  // Filter tickets by category and status
   const getFilteredTickets = (category) => {
     return tickets
       .filter((ticket) => ticket.category === category)
