@@ -35,18 +35,14 @@ describe("TicketForm Component", () => {
       render(<TicketForm ticket={{ _id: "new" }} />);
     });
     it("renders the create form with empty fields", async () => {
-      // Don't render again - component is already rendered in beforeEach
 
-      // Be more specific when querying by text by using a CSS selector to target the heading
       expect(
         screen.getByRole("heading", { name: "Create Your Ticket" })
       ).toBeInTheDocument();
 
-      // Get the Title and Description fields
       const titleInput = screen.getByLabelText("Title");
       const descriptionInput = screen.getByLabelText("Description");
 
-      // Check that Title and Description are empty
       expect(titleInput).toHaveValue("");
       expect(descriptionInput).toHaveValue("");
     });

@@ -12,6 +12,7 @@ const ClientDashboard = ({ initialTickets }) => {
     console.log("Initial tickets received:", initialTickets);
   }, [initialTickets]);
 
+  //Filter sta and cate
   const uniqueStatuses = [
     ...new Set(tickets?.map(({ status }) => status).filter(Boolean)),
   ];
@@ -51,6 +52,7 @@ const ClientDashboard = ({ initialTickets }) => {
       {/* Add the TicketStats component at the top */}
       <TicketStat tickets={tickets} />
 
+      {/*Select Status */}
       <div className="flex justify-center mb-8 space-x-4">
         {uniqueStatuses.map((status) => (
           <button
