@@ -1,6 +1,6 @@
 import Link from "next/link";
-import PriorityDisplay from "./PriorityDisplay";
-import StatusDisplay from "./StatusDisplay";
+import { PriorityDisplay } from "../share/StatusShare";
+import { StatusDisplay } from "../share/StatusShare";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTag,

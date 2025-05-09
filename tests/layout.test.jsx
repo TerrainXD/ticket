@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import RootLayout from "@/app/layout";
-import Nav from "@/app/components/controller/Nav";
+import Nav from "@/app/components/view/Nav";
 
 // Mock dependencies
 jest.mock("next/font/google", () => ({

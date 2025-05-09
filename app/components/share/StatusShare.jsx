@@ -1,6 +1,7 @@
 import { 
-    faHourglass, faCheckCircle, faCheck, faTimesCircle, faTicket 
+    faHourglass, faCheckCircle, faCheck, faTimesCircle, faTicket, faFire
   } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
   
   export const StatusFactory = {
     getStatusColor(status) {
@@ -44,3 +45,54 @@ import {
       </span>
     )
   };
+
+
+  export const PriorityDisplay = ({ priority }) => {
+    return (
+      <div className="flex justify-start align-baseline">
+        <FontAwesomeIcon
+          icon={faFire}
+          className={`pr-1 ${priority > 0 ? "text-red-400" : "text-slate-400"}`}
+        />
+        <FontAwesomeIcon
+          icon={faFire}
+          className={`pr-1 ${priority > 1 ? "text-red-400" : "text-slate-400"}`}
+        />
+        <FontAwesomeIcon
+          icon={faFire}
+          className={`pr-1 ${priority > 2 ? "text-red-400" : "text-slate-400"}`}
+        />
+        <FontAwesomeIcon
+          icon={faFire}
+          className={`pr-1 ${priority > 3 ? "text-red-400" : "text-slate-400"}`}
+        />
+        <FontAwesomeIcon
+          icon={faFire}
+          className={`pr-1 ${priority > 4 ? "text-red-400" : "text-slate-400"}`}
+        />
+      </div>
+    );
+  };
+
+  export const formatTimestamp = (timestamp) => {
+    if (!timestamp) return "Not available";
+
+    const options = {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    };
+
+    const date = new Date(timestamp);
+    return date.toLocaleString("en-US", options);
+  };
+
+  export default{
+    StatusDisplay,
+    StatusFactory,
+    PriorityDisplay,
+    formatTimestamp
+  }

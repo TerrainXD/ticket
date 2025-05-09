@@ -1,118 +1,27 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheckCircle,
   faTimesCircle,
 } from "@fortawesome/free-solid-svg-icons";
-import { TicketBuilder } from "../models/TicketBuilder";
+import TicketFormController from "../controller/TicketFormController";
 
-const TicketForm = ({ ticket }) => {
-  const {createTicket} = useState();
-  const EDITMODE = ticket._id === "new" ? false : true;
-  const router = useRouter();
+const TicketFormView = ({ ticket = { _id: "new" } }) => {
+  const {
+    EDITMODE,
+    formData,
+    handleChange,
+    handleSubmit,
+    handleStatusUpdate,
+    getStatusActions,
+    formatTimestamp,
+    ticket: ticketData
+  } = TicketFormController(ticket);
 
-  const STATUS_PROGRESSION = {
-    pending: ["accepted", "rejected"],
-    accepted: ["resolved"],
-    resolved: [],
-    rejected: [],
-  };
-
-  const handleStatusUpdate = async (newStatus) => {
-    const currentStatus = ticket.status;
-    const allowedNextStatuses = STATUS_PROGRESSION[currentStatus] || [];
-
-    if (!allowedNextStatuses.includes(newStatus)) {
-      alert(`Cannot change status from ${currentStatus} to ${newStatus}`);
-      return;
-    }
-
-    try {
-      // Update latestUpdate
-      const currentDate = new Date();
-
-      const res = await fetch(`/api/Tickets/${ticket._id}`, {
-        method: "PUT",
-        body: JSON.stringify({
-          formData: {
-            status: newStatus,
-            latestUpdate: currentDate,
-          },
-        }),
-        headers: {
-          "content-type": "application/json",
-        },
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to Update Ticket.");
-      }
-
-      router.refresh();
-      router.push("/");
-    } catch (error) {
-      console.error("Error updating ticket:", error);
-      alert("Failed to update ticket status.");
-    }
-  };
+  const statusActions = getStatusActions();
 
   if (EDITMODE) {
-    const getStatusActions = () => {
-      switch (ticket.status) {
-        case "pending":
-          return [
-            {
-              status: "accepted",
-              label: "Accept",
-              icon: faCheckCircle,
-              className: "bg-emerald-600 hover:bg-emerald-700",
-            },
-            {
-              status: "rejected",
-              label: "Reject",
-              icon: faTimesCircle,
-              className: "bg-red-600 hover:bg-red-700",
-            },
-          ];
-        case "accepted":
-          return [
-            {
-              status: "resolved",
-              label: "Resolve",
-              icon: faCheckCircle,
-              className: "bg-emerald-600 hover:bg-emerald-700",
-            },
-          ];
-        case "resolved":
-          return [];
-        case "rejected":
-          return [];
-        default:
-          return [];
-      }
-    };
-
-    const statusActions = getStatusActions();
-
-    const formatTimestamp = (timestamp) => {
-      if (!timestamp) return "Not available";
-
-      const options = {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-      };
-
-      const date = new Date(timestamp);
-      return date.toLocaleString("en-US", options);
-    };
-
     return (
       <div className="max-w-2xl mx-auto bg-slate-900 rounded-3xl border border-slate-800 shadow-2xl p-8">
         <h3 className="text-2xl text-white mb-6 pb-3 border-b border-slate-700">
@@ -125,7 +34,7 @@ const TicketForm = ({ ticket }) => {
               Title
             </label>
             <div className="bg-slate-800 rounded-xl p-3 text-white">
-              {ticket.title}
+              {ticketData.title}
             </div>
           </div>
 
@@ -134,7 +43,7 @@ const TicketForm = ({ ticket }) => {
               Description
             </label>
             <div className="bg-slate-800 rounded-xl p-3 text-white min-h-[100px]">
-              {ticket.description}
+              {ticketData.description}
             </div>
           </div>
 
@@ -144,7 +53,7 @@ const TicketForm = ({ ticket }) => {
                 Category
               </label>
               <div className="bg-slate-800 rounded-xl p-3 text-white">
-                {ticket.category}
+                {ticketData.category}
               </div>
             </div>
 
@@ -153,7 +62,7 @@ const TicketForm = ({ ticket }) => {
                 Current Status
               </label>
               <div className="bg-slate-800 rounded-xl p-3 text-white">
-                {ticket.status}
+                {ticketData.status}
               </div>
             </div>
           </div>
@@ -164,7 +73,7 @@ const TicketForm = ({ ticket }) => {
                 Priority
               </label>
               <div className="bg-slate-800 rounded-xl p-3 text-white">
-                {ticket.priority}
+                {ticketData.priority}
               </div>
             </div>
 
@@ -173,7 +82,7 @@ const TicketForm = ({ ticket }) => {
                 Created At
               </label>
               <div className="bg-slate-800 rounded-xl p-3 text-white">
-                {new Date(ticket.createdAt).toLocaleString()}
+                {new Date(ticketData.createdAt).toLocaleString()}
               </div>
             </div>
           </div>
@@ -188,7 +97,7 @@ const TicketForm = ({ ticket }) => {
                   Name
                 </label>
                 <div className="bg-slate-800 rounded-xl p-3 text-white">
-                  {ticket.contactName || "Not provided"}
+                  {ticketData.contactName || "Not provided"}
                 </div>
               </div>
               <div>
@@ -196,7 +105,7 @@ const TicketForm = ({ ticket }) => {
                   Email
                 </label>
                 <div className="bg-slate-800 rounded-xl p-3 text-white">
-                  {ticket.contactEmail || "Not provided"}
+                  {ticketData.contactEmail || "Not provided"}
                 </div>
               </div>
               <div>
@@ -204,7 +113,7 @@ const TicketForm = ({ ticket }) => {
                   Phone
                 </label>
                 <div className="bg-slate-800 rounded-xl p-3 text-white">
-                  {ticket.contactPhone || "Not provided"}
+                  {ticketData.contactPhone || "Not provided"}
                 </div>
               </div>
             </div>
@@ -215,7 +124,7 @@ const TicketForm = ({ ticket }) => {
               Latest Update
             </label>
             <div className="bg-slate-800 rounded-xl p-3 text-white">
-              {formatTimestamp(ticket.latestUpdate)}
+              {formatTimestamp(ticketData.latestUpdate)}
             </div>
           </div>
         </div>
@@ -232,7 +141,10 @@ const TicketForm = ({ ticket }) => {
                   ${action.className} text-white
                 `}
               >
-                <FontAwesomeIcon icon={action.icon} className="mr-2" />
+                <FontAwesomeIcon 
+                  icon={action.icon === "faCheckCircle" ? faCheckCircle : faTimesCircle} 
+                  className="mr-2" 
+                />
                 {action.label}
               </button>
             ))}
@@ -241,95 +153,6 @@ const TicketForm = ({ ticket }) => {
       </div>
     );
   }
-
-  const handleChange = (e) => {
-    const value = e.target.value;
-    const name = e.target.name;
-
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // const currentDate = new Date();
-
-    // const newTicketData = {
-    //   ...formData,
-    //   status: "pending",
-    //   latestUpdate: currentDate,
-    // };
-
-    // console.log("Submitting ticket data:", newTicketData);
-
-    // try {
-    //   const res = await fetch("/api/Tickets", {
-    //     method: "POST",
-    //     body: JSON.stringify({ formData: newTicketData }),
-    //     headers: {
-    //       "content-type": "application/json",
-    //     },
-    //   });
-
-    //   if (!res.ok) {
-    //     throw new Error("Failed to create Ticket.");
-    //   }
-
-    //   router.refresh();
-    //   router.push("/");
-    // } catch (error) {
-    //   console.error("Error creating ticket:", error);
-    //   alert("Failed to create ticket.");
-    // }
-
-    const builder = new TicketBuilder();
-    const newTicket = builder
-      .setTitle(formData.title)
-      .setDescription(formData.description)
-      .setPriority(formData.priority)
-      .setCategory(formData.category)
-      .setContactInfo(
-        formData.contactName,
-        formData.contactEmail,
-        formData.contactPhone
-      )
-      .build();
-
-    console.log("Submitting ticket data:", newTicket);
-
-    try {
-      const res = await fetch("/api/Tickets", {
-        method: "POST",
-        body: JSON.stringify({ formData: newTicket }),
-        headers: {
-          "content-type": "application/json",
-        },
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to create Ticket.");
-      }
-
-      router.refresh();
-      router.push("/");
-    } catch (error) {
-      console.error("Error creating ticket:", error);
-      alert("Failed to create ticket.");
-    }
-  };
-
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    priority: 1,
-    category: "Hardware Problem",
-    contactName: "",
-    contactEmail: "",
-    contactPhone: "",
-  });
 
   return (
     <div className="flex justify-center">
@@ -465,4 +288,4 @@ const TicketForm = ({ ticket }) => {
   );
 };
 
-export default TicketForm;
+export default TicketFormView;
