@@ -1,5 +1,5 @@
 import { GET, PUT } from "@/app/api/Tickets/[id]/route";
-import Ticket from "@/app/models/Ticket";
+import Ticket from "@/app/components/models/Ticket";
 import { NextResponse } from "next/server";
 
 // Mock dependencies

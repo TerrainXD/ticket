@@ -1,4 +1,4 @@
-import Nav from '@/app/components/Nav';
+import Nav from '@/app/components/controller/Nav';
 import { render, screen } from '@testing-library/react';
 Nav
 

@@ -1,4 +1,4 @@
-import PriorityDisplay from '@/app/components/PriorityDisplay';
+import PriorityDisplay from '@/app/components/controller/PriorityDisplay';
 import { render } from '@testing-library/react';
 PriorityDisplay
 

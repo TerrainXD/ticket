@@ -1,4 +1,4 @@
-import TicketForm from "@/app/components/TicketForm";
+import TicketForm from "@/app/components/controller/TicketForm";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { useRouter } from "next/navigation";
 

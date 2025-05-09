@@ -7,8 +7,10 @@ import {
   faCheckCircle,
   faTimesCircle,
 } from "@fortawesome/free-solid-svg-icons";
+import { TicketBuilder } from "../models/TicketBuilder";
 
 const TicketForm = ({ ticket }) => {
+  const {createTicket} = useState();
   const EDITMODE = ticket._id === "new" ? false : true;
   const router = useRouter();
 
@@ -253,20 +255,55 @@ const TicketForm = ({ ticket }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const currentDate = new Date();
+    // const currentDate = new Date();
 
-    const newTicketData = {
-      ...formData,
-      status: "pending",
-      latestUpdate: currentDate,
-    };
+    // const newTicketData = {
+    //   ...formData,
+    //   status: "pending",
+    //   latestUpdate: currentDate,
+    // };
 
-    console.log("Submitting ticket data:", newTicketData);
+    // console.log("Submitting ticket data:", newTicketData);
+
+    // try {
+    //   const res = await fetch("/api/Tickets", {
+    //     method: "POST",
+    //     body: JSON.stringify({ formData: newTicketData }),
+    //     headers: {
+    //       "content-type": "application/json",
+    //     },
+    //   });
+
+    //   if (!res.ok) {
+    //     throw new Error("Failed to create Ticket.");
+    //   }
+
+    //   router.refresh();
+    //   router.push("/");
+    // } catch (error) {
+    //   console.error("Error creating ticket:", error);
+    //   alert("Failed to create ticket.");
+    // }
+
+    const builder = new TicketBuilder();
+    const newTicket = builder
+      .setTitle(formData.title)
+      .setDescription(formData.description)
+      .setPriority(formData.priority)
+      .setCategory(formData.category)
+      .setContactInfo(
+        formData.contactName,
+        formData.contactEmail,
+        formData.contactPhone
+      )
+      .build();
+
+    console.log("Submitting ticket data:", newTicket);
 
     try {
       const res = await fetch("/api/Tickets", {
         method: "POST",
-        body: JSON.stringify({ formData: newTicketData }),
+        body: JSON.stringify({ formData: newTicket }),
         headers: {
           "content-type": "application/json",
         },

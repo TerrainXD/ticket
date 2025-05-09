@@ -1,4 +1,4 @@
-import StatusDisplay from "@/app/components/StatusDisplay";
+import StatusDisplay from "@/app/components/controller/StatusDisplay";
 import { render, screen } from "@testing-library/react";
 StatusDisplay
 

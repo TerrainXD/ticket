@@ -1,4 +1,4 @@
-import TicketCard from "@/app/components/TicketCard";
+import TicketCard from "@/app/components/controller/TicketCard";
 import { render, screen } from "@testing-library/react";
 TicketCard;
 

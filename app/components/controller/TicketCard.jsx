@@ -5,9 +5,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTag,
   faClock,
-  faUser,
-  faEnvelope,
-  faPhone,
   faHistory,
 } from "@fortawesome/free-solid-svg-icons";
 

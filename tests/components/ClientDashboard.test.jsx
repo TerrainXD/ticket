@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import ClientDashboard from "@/app/components/ClientDashboard";
+import ClientDashboard from "@/app/components/controller/ClientDashboard";
 
 jest.mock("@/app/components/TicketCard", () => {
   return function MockTicketCard({ ticket }) {
