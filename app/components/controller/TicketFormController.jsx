@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { formatTimestamp } from "../share/share";
 import { TicketBuilder } from "../models/TicketBuilder";
 
 const TicketFormController = (ticket = { _id: "new" }) => {
@@ -147,22 +148,6 @@ const TicketFormController = (ticket = { _id: "new" }) => {
       default:
         return [];
     }
-  };
-
-  const formatTimestamp = (timestamp) => {
-    if (!timestamp) return "Not available";
-
-    const options = {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    };
-
-    const date = new Date(timestamp);
-    return date.toLocaleString("en-US", options);
   };
 
   return {

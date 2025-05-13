@@ -1,30 +1,19 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import ClientDashboardController from "../controller/ClientDashboardController";
 import TicketCard from "./TicketCard";
 import TicketStat from "./TicketStat";
 
-const ClientDashboard = ({ initialTickets }) => {
-  const [tickets, setTickets] = useState(initialTickets || []);
-  const [selectedStatus, setSelectedStatus] = useState(null);
-
-  useEffect(() => {
-    console.log("Initial tickets received:", initialTickets);
-  }, [initialTickets]);
-
-  //Filter sta and cate
-  const uniqueStatuses = [
-    ...new Set(tickets?.map(({ status }) => status).filter(Boolean)),
-  ];
-  const uniqueCategories = [
-    ...new Set(tickets?.map(({ category }) => category).filter(Boolean)),
-  ];
-
-  const getFilteredTickets = (category) => {
-    return tickets
-      .filter((ticket) => ticket.category === category)
-      .filter((ticket) => !selectedStatus || ticket.status === selectedStatus);
-  };
+const ClientDashboardView = ({ initialTickets }) => {
+  const {
+    tickets,
+    selectedStatus,
+    uniqueStatuses,
+    uniqueCategories,
+    getFilteredTickets,
+    getStatusColor,
+    handleStatusSelect,
+  } = ClientDashboardController(initialTickets);
 
   if (!tickets || tickets.length === 0) {
     return (
@@ -33,19 +22,6 @@ const ClientDashboard = ({ initialTickets }) => {
       </div>
     );
   }
-
-  const getStatusColor = (status, isSelected) => {
-    const baseColors = {
-      pending: "bg-red-800 text-white",
-      accepted: "bg-yellow-800 text-white",
-      resolved: "bg-green-800 text-white",
-      rejected: "bg-gray-800 text-white",
-    };
-
-    return isSelected
-      ? baseColors[status]
-      : "bg-blue-950 text-blue-300 hover:bg-blue-900";
-  };
 
   return (
     <div className="p-6 md:p-8 lg:p-10">
@@ -57,9 +33,7 @@ const ClientDashboard = ({ initialTickets }) => {
         {uniqueStatuses.map((status) => (
           <button
             key={status}
-            onClick={() =>
-              setSelectedStatus(selectedStatus === status ? null : status)
-            }
+            onClick={() => handleStatusSelect(status)}
             className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${getStatusColor(
               status,
               selectedStatus === status
@@ -99,4 +73,4 @@ const ClientDashboard = ({ initialTickets }) => {
   );
 };
 
-export default ClientDashboard;
+export default ClientDashboardView;

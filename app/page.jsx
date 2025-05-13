@@ -1,4 +1,4 @@
-import ClientDashboard from "./components/controller/ClientDashboard";
+import ClientDashboard from "./components/view/ClientDashboardView";
 
 const getTickets = async () => {
   try {

@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import TicketStats from "@/app/components/controller/TicketStat";
+import TicketStats from "@/app/components/view/TicketStat";
 
 jest.mock("@fortawesome/react-fontawesome", () => ({
   FontAwesomeIcon: () => <div data-testid="mock-icon" />

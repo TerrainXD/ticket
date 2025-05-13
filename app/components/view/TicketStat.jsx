@@ -1,12 +1,9 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTicket,
-  faHourglass,
-  faCheckCircle,
-  faTimesCircle,
-  faCheck,
+
 } from "@fortawesome/free-solid-svg-icons";
-import { StatusFactory } from "../share/StatusShare";
+import { StatusFactory } from "../share/share";
 
 const TicketStats = ({ tickets }) => {
   if (!tickets || tickets.length === 0) {

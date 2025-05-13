@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { PriorityDisplay } from "../share/StatusShare";
-import { StatusDisplay } from "../share/StatusShare";
+import { PriorityDisplay, StatusDisplay, formatTimestamp } from "../share/share";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTag,
@@ -9,22 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 const TicketCard = ({ ticket }) => {
-  const formatTimestamp = (timestamp) => {
-    if (!timestamp) return null;
-
-    const options = {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    };
-
-    const date = new Date(timestamp);
-    return date.toLocaleString("en-US", options);
-  };
-
+ 
   const hasContactInfo =
     ticket.contactName || ticket.contactEmail || ticket.contactPhone;
 
