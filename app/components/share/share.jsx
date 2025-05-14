@@ -29,6 +29,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
   //Interface
   class Status {
+    constructor(){
+      if(this.constructor === Status){
+        throw new Error("Can not be instantiated")
+      }
+    }
     getColor() {throw new Error("Method 'getColor' must be implemented.");}
     getIcon() {throw new Error("Method 'getInfo' must be implemented.");}
     getBackgroundGradient() {throw new Error("Method 'getBackgroundGradient' must be implemented.");}
@@ -63,6 +68,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
     getIcon() { return faTicket; }
     getBackgroundGradient() { return "from-blue-500/20 to-blue-600/30 text-blue-400"; }
   } 
+
+  
 
   export const StatusFactory = {
 
