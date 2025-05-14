@@ -6,7 +6,7 @@ import { formatTimestamp } from "../share/share";
 import { TicketBuilder } from "../models/TicketBuilder";
 
 interface Ticket {
-  latestUpdate(): number;
+  latestUpdate: number | string | Date;
   createdAt: string | number | Date;
   _id: string;
   title?: string;
@@ -19,17 +19,20 @@ interface Ticket {
   status?: string;
 }
 
-const TicketFormController = (ticket: Ticket = {
-  _id: "new",
-  createdAt: "",
-  latestUpdate: function (): number {
-    throw new Error("Function not implemented.");
+const TicketFormController = (
+  ticket: Ticket = {
+    _id: "new",
+    createdAt: "",
+    latestUpdate: Date.now()
   }
-}) => {
+) => {
   const EDITMODE = ticket._id === "new" ? false : true;
   const router = useRouter();
 
-  const STATUS_PROGRESSION: Record<"pending" | "accepted" | "resolved" | "rejected", string[]> = {
+  const STATUS_PROGRESSION: Record<
+    "pending" | "accepted" | "resolved" | "rejected",
+    string[]
+  > = {
     pending: ["accepted", "rejected"],
     accepted: ["resolved"],
     resolved: [],
@@ -46,7 +49,7 @@ const TicketFormController = (ticket: Ticket = {
     contactPhone: EDITMODE ? ticket.contactPhone : "",
   });
 
-  const handleChange = (e: { target: { value: string; name: string; }; }) => {
+  const handleChange = (e: { target: { value: string; name: string } }) => {
     const value = e.target.value;
     const name = e.target.name;
 
@@ -56,7 +59,7 @@ const TicketFormController = (ticket: Ticket = {
     }));
   };
 
-  const handleSubmit = async (e: { preventDefault: () => void; }) => {
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
     const builder = new TicketBuilder();
@@ -95,11 +98,12 @@ const TicketFormController = (ticket: Ticket = {
     }
   };
 
-  const handleStatusUpdate = async (newStatus : string) => {
+  const handleStatusUpdate = async (newStatus: string) => {
     const currentStatus = ticket.status;
-    const allowedNextStatuses = currentStatus && currentStatus in STATUS_PROGRESSION 
-      ? STATUS_PROGRESSION[currentStatus as keyof typeof STATUS_PROGRESSION] 
-      : [];
+    const allowedNextStatuses =
+      currentStatus && currentStatus in STATUS_PROGRESSION
+        ? STATUS_PROGRESSION[currentStatus as keyof typeof STATUS_PROGRESSION]
+        : [];
 
     if (!allowedNextStatuses.includes(newStatus)) {
       alert(`Cannot change status from ${currentStatus} to ${newStatus}`);
@@ -137,7 +141,7 @@ const TicketFormController = (ticket: Ticket = {
 
   const getStatusActions = () => {
     if (!EDITMODE) return [];
-    
+
     switch (ticket.status) {
       case "pending":
         return [
@@ -180,7 +184,7 @@ const TicketFormController = (ticket: Ticket = {
     handleStatusUpdate,
     getStatusActions,
     formatTimestamp,
-    ticket
+    ticket,
   };
 };
 

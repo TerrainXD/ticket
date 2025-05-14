@@ -1,7 +1,7 @@
 import Ticket from "../../../components/models/Ticket";
 import { NextResponse } from "next/server";
 
-export async function GET(req: any, { params }: any) {
+export async function GET(req: string, { params }: any) {
   try {
     const { id } = await params;
     const foundTicket = await Ticket.findOne({ _id: id });

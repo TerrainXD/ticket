@@ -10,7 +10,7 @@ const getTicketById = async (id: string) => {
   return res.json();
 };
 
-const TicketPage = async ({ params }: { params: any }) => {
+const TicketPage = async ({ params }: { params: { id: string } }) => {
   const id = (await params)?.id;
   const EDITMODE = id === "new" ? false : true;
 

@@ -7,7 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import TicketFormController from "../controller/TicketFormController";
 
-const TicketFormView = ({ ticket = { _id: "new", createdAt: new Date().toISOString(), latestUpdate: () => Date.now() } }) => {
+const TicketFormView = ({ ticket = { _id: "new", createdAt: new Date().toISOString(), latestUpdate:  Date.now() } }) => {
   const {
     EDITMODE,
     formData,
@@ -124,7 +124,7 @@ const TicketFormView = ({ ticket = { _id: "new", createdAt: new Date().toISOStri
               Latest Update
             </label>
             <div className="bg-slate-800 rounded-xl p-3 text-white">
-              {formatTimestamp(ticketData.latestUpdate())}
+              {formatTimestamp(new Date(ticketData.latestUpdate).getTime())}
             </div>
           </div>
         </div>
