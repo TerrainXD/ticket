@@ -185,10 +185,3 @@ export const formatTimestamp = (timestamp : number) => {
   const date = new Date(timestamp);
   return date.toLocaleString("en-US", options);
 };
-
-export default {
-  StatusDisplay,
-  StatusFactory,
-  PriorityDisplay,
-  formatTimestamp,
-};

@@ -12,7 +12,7 @@ export async function GET(req: string, { params }: any) {
   }
 }
 
-export async function PUT(req: { json: () => any }, { params }: any) {
+export async function PUT(req: Request, { params }: any) {
   try {
     const { id } = params;
     const body = await req.json();

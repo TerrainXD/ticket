@@ -6,8 +6,8 @@ import { formatTimestamp } from "../share/share";
 import { TicketBuilder } from "../models/TicketBuilder";
 
 interface Ticket {
-  latestUpdate: number | string | Date;
-  createdAt: string | number | Date;
+  latestUpdate: number | Date;
+  createdAt: string | Date;
   _id: string;
   title?: string;
   description?: string;
@@ -23,7 +23,7 @@ const TicketFormController = (
   ticket: Ticket = {
     _id: "new",
     createdAt: "",
-    latestUpdate: Date.now()
+    latestUpdate: Date.now(),
   }
 ) => {
   const EDITMODE = ticket._id === "new" ? false : true;
