@@ -1,6 +1,6 @@
-import TicketFormView from "@/app/components/view/TicketFormView";
+import TicketFormView from "../../components/view/TicketFormView";
 
-const getTicketById = async (id) => {
+const getTicketById = async (id: string) => {
   const res = await fetch(`http://localhost:3000/api/Tickets/${id}`, {
     cache: "no-store",
   });
@@ -10,11 +10,11 @@ const getTicketById = async (id) => {
   return res.json();
 };
 
-const TicketPage = async ({ params }) => {
+const TicketPage = async ({ params }: { params: any }) => {
   const id = (await params)?.id;
   const EDITMODE = id === "new" ? false : true;
 
-  let updateTicketData = {};
+  let updateTicketData: any = {};
 
   if (EDITMODE) {
     updateTicketData = await getTicketById(id);

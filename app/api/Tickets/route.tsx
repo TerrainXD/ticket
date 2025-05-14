@@ -1,4 +1,4 @@
-import Ticket from "@/app/components/models/Ticket";
+import Ticket from "../../components/models/Ticket";
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -12,7 +12,7 @@ export async function GET() {
   }
 }
 
-export async function POST(req) {
+export async function POST(req: any) {
   try {
     const body = await req.json();
     const ticketData = body.formData;

@@ -1,7 +1,7 @@
-import Ticket from "@/app/components/models/Ticket";
+import Ticket from "../../../components/models/Ticket";
 import { NextResponse } from "next/server";
 
-export async function GET(req, { params }) {
+export async function GET(req: any, { params }: any) {
   try {
     const { id } = await params;
     const foundTicket = await Ticket.findOne({ _id: id });
@@ -12,7 +12,7 @@ export async function GET(req, { params }) {
   }
 }
 
-export async function PUT(req, { params }) {
+export async function PUT(req: { json: () => any }, { params }: any) {
   try {
     const { id } = params;
     const body = await req.json();

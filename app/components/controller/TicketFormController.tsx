@@ -5,11 +5,31 @@ import { useState } from "react";
 import { formatTimestamp } from "../share/share";
 import { TicketBuilder } from "../models/TicketBuilder";
 
-const TicketFormController = (ticket = { _id: "new" }) => {
+interface Ticket {
+  latestUpdate(): number;
+  createdAt: string | number | Date;
+  _id: string;
+  title?: string;
+  description?: string;
+  priority?: number;
+  category?: string;
+  contactName?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  status?: string;
+}
+
+const TicketFormController = (ticket: Ticket = {
+  _id: "new",
+  createdAt: "",
+  latestUpdate: function (): number {
+    throw new Error("Function not implemented.");
+  }
+}) => {
   const EDITMODE = ticket._id === "new" ? false : true;
   const router = useRouter();
 
-  const STATUS_PROGRESSION = {
+  const STATUS_PROGRESSION: Record<"pending" | "accepted" | "resolved" | "rejected", string[]> = {
     pending: ["accepted", "rejected"],
     accepted: ["resolved"],
     resolved: [],
@@ -26,7 +46,7 @@ const TicketFormController = (ticket = { _id: "new" }) => {
     contactPhone: EDITMODE ? ticket.contactPhone : "",
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: { target: { value: string; name: string; }; }) => {
     const value = e.target.value;
     const name = e.target.name;
 
@@ -36,19 +56,19 @@ const TicketFormController = (ticket = { _id: "new" }) => {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
 
     const builder = new TicketBuilder();
     const newTicket = builder
-      .setTitle(formData.title)
-      .setDescription(formData.description)
-      .setPriority(formData.priority)
-      .setCategory(formData.category)
+      .setTitle(formData.title || "")
+      .setDescription(formData.description || "")
+      .setPriority(formData.priority || "")
+      .setCategory(formData.category || "")
       .setContactInfo(
-        formData.contactName,
-        formData.contactEmail,
-        formData.contactPhone
+        formData.contactName || "",
+        formData.contactEmail || "",
+        formData.contactPhone || ""
       )
       .build();
 
@@ -75,9 +95,11 @@ const TicketFormController = (ticket = { _id: "new" }) => {
     }
   };
 
-  const handleStatusUpdate = async (newStatus) => {
+  const handleStatusUpdate = async (newStatus : string) => {
     const currentStatus = ticket.status;
-    const allowedNextStatuses = STATUS_PROGRESSION[currentStatus] || [];
+    const allowedNextStatuses = currentStatus && currentStatus in STATUS_PROGRESSION 
+      ? STATUS_PROGRESSION[currentStatus as keyof typeof STATUS_PROGRESSION] 
+      : [];
 
     if (!allowedNextStatuses.includes(newStatus)) {
       alert(`Cannot change status from ${currentStatus} to ${newStatus}`);

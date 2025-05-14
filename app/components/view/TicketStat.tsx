@@ -4,15 +4,16 @@ import {
 
 } from "@fortawesome/free-solid-svg-icons";
 import { StatusFactory } from "../share/share";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
-const TicketStats = ({ tickets }) => {
+const TicketStats = ({ tickets }: {tickets : any}) => {
   if (!tickets || tickets.length === 0) {
     return null;
   }
 
   const totalTickets = tickets.length;
 
-  const statusCounts = tickets.reduce((counts, ticket) => {
+  const statusCounts = tickets.reduce((counts: { [x: string]: any; }, ticket: { status: string; }) => {
     const status = ticket.status || "unknown";
     counts[status] = (counts[status] || 0) + 1;
     return counts;
@@ -57,7 +58,7 @@ const TicketStats = ({ tickets }) => {
           </div>
           <div className={`bg-${status.toLowerCase()}-500/30 p-3 rounded-xl`}>
             <FontAwesomeIcon
-              icon={StatusFactory.getStatusIcon(status)}
+              icon={StatusFactory.getStatusIcon(status) as unknown as IconProp}
               className="text-2xl"
             />
           </div>

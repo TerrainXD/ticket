@@ -1,14 +1,13 @@
 import Link from "next/link";
-import { PriorityDisplay, StatusDisplay, formatTimestamp } from "../share/share";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faTag,
-  faClock,
-  faHistory,
-} from "@fortawesome/free-solid-svg-icons";
+  PriorityDisplay,
+  StatusDisplay,
+  formatTimestamp,
+} from "../share/share";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTag, faClock, faHistory } from "@fortawesome/free-solid-svg-icons";
 
-const TicketCard = ({ ticket }) => {
- 
+const TicketCard = ({ ticket }: { ticket: any }) => {
   const hasContactInfo =
     ticket.contactName || ticket.contactEmail || ticket.contactPhone;
 

@@ -4,7 +4,11 @@ import ClientDashboardController from "../controller/ClientDashboardController";
 import TicketCard from "./TicketCard";
 import TicketStat from "./TicketStat";
 
-const ClientDashboardView = ({ initialTickets }) => {
+interface ClientDashboardViewProps {
+  initialTickets: any[];
+}
+
+const ClientDashboardView = ({ initialTickets }: ClientDashboardViewProps) => {
   const {
     tickets,
     selectedStatus,
@@ -59,7 +63,6 @@ const ClientDashboardView = ({ initialTickets }) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
                   {filteredTickets.map((filteredTicket, _index) => (
                     <TicketCard
-                      id={_index}
                       key={filteredTicket._id || _index}
                       ticket={filteredTicket}
                     />
